@@ -9,6 +9,26 @@ function App() {
         posx={100}
         posy={100}
       />
+      <BalatroCard
+        src="https://images.wurdle.eu/Jimbo.png"
+        posx={200}
+        posy={100}
+      />
+      <BalatroCard
+        src="https://images.wurdle.eu/Jimbo.png"
+        posx={300}
+        posy={100}
+      />
+      <BalatroCard
+        src="https://images.wurdle.eu/Jimbo.png"
+        posx={400}
+        posy={100}
+      />
+      <BalatroCard
+        src="https://images.wurdle.eu/Jimbo.png"
+        posx={500}
+        posy={100}
+      />
     </>
   );
 }

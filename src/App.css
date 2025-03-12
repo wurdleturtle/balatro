@@ -40,6 +40,7 @@ html {
 
 .balatrocard {
   width: 80px;
+  position: absolute;
 }
 
 .fakebutton {
@@ -92,4 +93,8 @@ html {
   color: #ffffff;
   scale: 2;
   background-color: #ff2e62;
+}
+
+.dragging {
+  z-index: 999;
 }
