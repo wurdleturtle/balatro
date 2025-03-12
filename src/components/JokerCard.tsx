@@ -2,6 +2,7 @@ import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 interface Props {
+  spriteSheetUrl?: string; // URL of the sprite sheet
   spriteIndex: number; // Index of the sprite in the sprite sheet (0-based)
   posx: number;
   posy: number;
@@ -16,15 +17,20 @@ const ROWS = Math.floor(3040 / SPRITE_HEIGHT); // Number of rows based on sprite
 const DISPLAY_WIDTH = 140; // The width of the sprite when displayed on screen
 const DISPLAY_HEIGHT = 185; // The height of the sprite when displayed on screen
 
-const BalatroCard = ({ spriteIndex, posx, posy }: Props) => {
+const JokerCard = ({
+  spriteSheetUrl = 'https://images.wurdle.eu/Jokers.png',
+  spriteIndex,
+  posx,
+  posy,
+}: Props) => {
   const controls = useAnimation();
   const [position, setPosition] = useState({ x: posx, y: posy });
   const [rotation, setRotation] = useState(0);
   const [dragging, setDragging] = useState(false);
 
   // Rotation speed factor (decreased for slower rotation)
-  const rotationSpeed = 0.02; // Lower value for slower rotation
-  const rotationLimit = 30; // Max rotation in degrees
+  const rotationSpeed = 0.01; // Lower value for slower rotation
+  const rotationLimit = 60; // Max rotation in degrees
 
   // Function to calculate rotation based on drag velocity (use velocity for more dynamic rotation)
   const calculateRotation = (velocity: number) => {
@@ -77,7 +83,7 @@ const BalatroCard = ({ spriteIndex, posx, posy }: Props) => {
         style={{
           width: `${DISPLAY_WIDTH}px`,
           height: `${DISPLAY_HEIGHT}px`,
-          backgroundImage: 'url(https://images.wurdle.eu/Jokers.png)', // Path to your spritesheet
+          backgroundImage: `url(${spriteSheetUrl})`, // Path to your spritesheet from prop
           backgroundPosition: `${backgroundX}px ${backgroundY}px`,
           backgroundSize: backgroundSize,
           backgroundRepeat: 'no-repeat',
@@ -92,4 +98,4 @@ const BalatroCard = ({ spriteIndex, posx, posy }: Props) => {
   );
 };
 
-export default BalatroCard;
+export default JokerCard;
