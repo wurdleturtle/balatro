@@ -8,14 +8,14 @@ interface Props {
   posy: number;
 }
 
-const SPRITE_WIDTH = 141; // Width of each sprite in the spritesheet (141px)
-const SPRITE_HEIGHT = 189; // Height of each sprite in the spritesheet (189px)
+const SPRITE_WIDTH = 140; // Width of each sprite in the spritesheet (141px)
+const SPRITE_HEIGHT = 190; // Height of each sprite in the spritesheet (189px)
 const COLUMNS = Math.floor(1420 / SPRITE_WIDTH); // Number of columns based on spritesheet width
 const ROWS = Math.floor(3040 / SPRITE_HEIGHT); // Number of rows based on spritesheet height
 
 // Hardcoded display size for each sprite
 const DISPLAY_WIDTH = 140; // The width of the sprite when displayed on screen
-const DISPLAY_HEIGHT = 185; // The height of the sprite when displayed on screen
+const DISPLAY_HEIGHT = 190; // The height of the sprite when displayed on screen
 
 const JokerCard = ({
   spriteSheetUrl = 'https://images.wurdle.eu/Jokers.png',
@@ -60,9 +60,9 @@ const JokerCard = ({
   }, [position, controls]);
 
   return (
-    <div className="relative w-screen h-screen flex items-center justify-center bg-gray-100">
+    <div className="relative w-screen h-screen flex items-center justify-center bg-gray-100 balatrocard">
       <motion.div
-        className="balatrocard cursor-grab"
+        className="cursor-grab"
         drag
         dragElastic={0.3} // Increased for a smoother drag effect
         dragMomentum={true}

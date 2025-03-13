@@ -2,53 +2,57 @@ import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 interface Props {
-  spriteSheetUrl?: string; // URL of the sprite sheet
-  spriteIndex: number; // Index of the sprite in the sprite sheet (0-based)
+  EnhancerSpriteSheetUrl?: string;
+  DeckSpriteSheetUrl?: string;
+  EnhancerSpriteIndex: number;
+  DeckSpriteIndex: number;
   posx: number;
   posy: number;
 }
 
-const SPRITE_WIDTH = 141; // Width of each sprite in the spritesheet (141px)
-const SPRITE_HEIGHT = 189; // Height of each sprite in the spritesheet (189px)
-const COLUMNS = Math.floor(1420 / SPRITE_WIDTH); // Number of columns based on spritesheet width
-const ROWS = Math.floor(3040 / SPRITE_HEIGHT); // Number of rows based on spritesheet height
+const Enhancer_WIDTH = 141;
+const Enhancer_HEIGHT = 185;
+const Deck_WIDTH = 141;
+const Deck_HEIGHT = 185;
 
-// Hardcoded display size for each sprite
-const DISPLAY_WIDTH = 140; // The width of the sprite when displayed on screen
-const DISPLAY_HEIGHT = 185; // The height of the sprite when displayed on screen
+const FG_COLUMNS = Math.floor(994 / Enhancer_WIDTH);
+const FG_ROWS = Math.floor(950 / Enhancer_HEIGHT);
+const BG_COLUMNS = Math.floor(1846 / Deck_WIDTH);
+const BG_ROWS = Math.floor(760 / Deck_HEIGHT);
 
 const DeckCards = ({
-  spriteSheetUrl = 'https://images.wurdle.eu/Deck.png',
-  spriteIndex,
+  EnhancerSpriteSheetUrl = 'https://images.wurdle.eu/Enhancers.png',
+  DeckSpriteSheetUrl = 'https://images.wurdle.eu/Deck.png',
+  EnhancerSpriteIndex,
+  DeckSpriteIndex,
   posx,
   posy,
 }: Props) => {
   const controls = useAnimation();
   const [position, setPosition] = useState({ x: posx, y: posy });
   const [rotation, setRotation] = useState(0);
-  const [dragging, setDragging] = useState(false);
 
-  // Rotation speed factor (decreased for slower rotation)
-  const rotationSpeed = 0.02; // Lower value for slower rotation
-  const rotationLimit = 30; // Max rotation in degrees
+  const rotationSpeed = 0.02;
+  const rotationLimit = 30;
 
-  // Function to calculate rotation based on drag velocity (use velocity for more dynamic rotation)
   const calculateRotation = (velocity: number) => {
-    const angle = velocity * rotationSpeed; // Apply slower speed factor to the velocity
-    return Math.max(Math.min(angle, rotationLimit), -rotationLimit); // Limit between -30 and 30 degrees
+    const angle = velocity * rotationSpeed;
+    return Math.max(Math.min(angle, rotationLimit), -rotationLimit);
   };
 
-  // Calculate the row and column based on the sprite index
-  const row = Math.floor(spriteIndex / COLUMNS);
-  const col = spriteIndex % COLUMNS;
+  const fgRow = Math.floor(EnhancerSpriteIndex / FG_COLUMNS);
+  const fgCol = EnhancerSpriteIndex % FG_COLUMNS;
+  const bgRow = Math.floor(DeckSpriteIndex / BG_COLUMNS);
+  const bgCol = DeckSpriteIndex % BG_COLUMNS;
 
-  // Calculate the background position (in negative pixels)
-  const backgroundX = -(col * SPRITE_WIDTH);
-  const backgroundY = -(row * SPRITE_HEIGHT);
+  const EnhancerX = -(fgCol * Enhancer_WIDTH);
+  const EnhancerY = -(fgRow * Enhancer_HEIGHT);
+  const DeckX = -(bgCol * Deck_WIDTH);
+  const DeckY = -(bgRow * Deck_HEIGHT);
 
-  // Calculate the background size (the total size of the spritesheet)
-  const backgroundSize = `${SPRITE_WIDTH * COLUMNS}px ${
-    SPRITE_HEIGHT * ROWS
+  const DeckSize = `${Deck_WIDTH * BG_COLUMNS}px ${Deck_HEIGHT * BG_ROWS}px`;
+  const EnhancerSize = `${Enhancer_WIDTH * FG_COLUMNS}px ${
+    Enhancer_HEIGHT * FG_ROWS
   }px`;
 
   useEffect(() => {
@@ -60,40 +64,55 @@ const DeckCards = ({
   }, [position, controls]);
 
   return (
-    <div className="relative w-screen h-screen flex items-center justify-center bg-gray-100">
+    <div className="relative w-screen h-screen flex items-center justify-center bg-gray-100 balatrocard">
       <motion.div
-        className="balatrocard cursor-grab"
+        className="relative"
         drag
-        dragElastic={0.3} // Increased for a smoother drag effect
+        dragElastic={0.3}
         dragMomentum={true}
-        whileDrag={{ scale: 1.3 }} // Increased size during drag
-        whileHover={{ scale: 1.2 }} // Scale the card when hovered
+        whileDrag={{ scale: 1.3 }}
+        whileHover={{ scale: 1.2 }}
         onDrag={(_, info) => {
           const velocity = info.velocity.x;
           const angle = calculateRotation(velocity);
           setRotation(angle);
-          setDragging(true);
         }}
-        onDragEnd={(_) => {
+        onDragEnd={() => {
           setPosition({ x: position.x, y: position.y });
           setRotation(0);
-          setDragging(false);
         }}
         animate={controls}
-        style={{
-          width: `${DISPLAY_WIDTH}px`,
-          height: `${DISPLAY_HEIGHT}px`,
-          backgroundImage: `url(${spriteSheetUrl})`, // Path to your spritesheet from prop
-          backgroundPosition: `${backgroundX}px ${backgroundY}px`,
-          backgroundSize: backgroundSize,
-          backgroundRepeat: 'no-repeat',
-          rotate: rotation,
-          transition: dragging
-            ? 'none'
-            : 'rotate 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)', // Smooth transition when not dragging
-          zIndex: dragging ? 999 : 'auto',
-        }}
-      />
+        style={{ position: 'absolute', rotate: `${rotation}deg` }}
+      >
+        {/* Deck Layer */}
+        <motion.div
+          style={{
+            width: `${Deck_WIDTH}px`,
+            height: `${Deck_HEIGHT}px`,
+            backgroundImage: `url(${DeckSpriteSheetUrl})`,
+            backgroundPosition: `${DeckX}px ${DeckY}px`,
+            backgroundSize: DeckSize,
+            backgroundRepeat: 'no-repeat',
+            position: 'absolute',
+            zIndex: 1,
+          }}
+          animate={{ rotate: rotation }}
+        />
+
+        {/* Enhancer Layer */}
+        <motion.div
+          style={{
+            width: `${Enhancer_WIDTH}px`,
+            height: `${Enhancer_HEIGHT}px`,
+            backgroundImage: `url(${EnhancerSpriteSheetUrl})`,
+            backgroundPosition: `${EnhancerX}px ${EnhancerY}px`,
+            backgroundSize: EnhancerSize,
+            backgroundRepeat: 'no-repeat',
+            zIndex: 2,
+          }}
+          animate={{ rotate: rotation }}
+        />
+      </motion.div>
     </div>
   );
 };

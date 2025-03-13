@@ -39,7 +39,7 @@ html {
 }
 
 .balatrocard {
-  width: 80px;
+  width: 40px;
   position: absolute;
 }
 
@@ -97,4 +97,14 @@ html {
 
 .dragging {
   z-index: 999;
+}
+
+/* CRT Screen Effect */
+@keyframes scanlines {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 10px;
+  }
 }
